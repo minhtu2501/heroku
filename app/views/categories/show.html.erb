@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<h1><b><%= @category.name %></b></h1>
+		<ol class="list-group">
+   			<% @category.microposts.each do |micropost| %>	 	
+			<li class="list-group-item">
+			<span><%= image_tag micropost.user.avatar.url, size: "40x40" %></span>
+			<span>
+			<%= link_to micropost.user.name, micropost.user %> :
+			</span>
+			<%= micropost.content %>
+
+			<span class="timestamp">	
+			Posted <%= time_ago_in_words(micropost.created_at) %> ago.
+			<% if current_user?(micropost.user) %>
+			<%= link_to "Delete", micropost, method: :delete,
+									data: {confirm: "Are you sure?"} %>
+			<% end %>
+			</span>
+			
+			</li>
+			<% end %>
+		</ol>
+	</div>
+</div>

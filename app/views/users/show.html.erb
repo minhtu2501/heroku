@@ -1,0 +1,30 @@
+<% provide(:title, @user.name) %>
+  <aside class="col-md-4">
+    <section class="user_info">
+      <span class="avatar"><%= image_tag @user.avatar.url, size: "120x120" %></span>   
+      <h1>
+        <%= @user.name %>
+      </h1>
+      <span><b>Email:</b> <i><%= @user.email %></i></span>
+      <span><b>Microposts:</b> <%= @user.microposts.count %></span>
+    </section>
+    <section class="stats">
+      <%= render 'shared/stats' %>
+    </section>
+    <% if current_user?(@user) %>
+    <%= form_for current_user, url: { action: 'update' }, html: { multipart: true } do |form| %>
+    <%= form.file_field :avatar %>
+    <%= form.submit "Upload" %>
+    <% end %>
+<% end %>
+  </aside>
+  <div class="col-md-8">  
+    <%= render 'shared/follow_form' if logged_in? %>
+  	<% if @user.microposts.any? %>
+  	 	<h3>Microposts (<%= @user.microposts.count %>)</h3>
+  	 	<ol class="microposts">
+  	 		<%= render @microposts %>
+  	 	</ol>
+  	 	<%= will_paginate @microposts %>
+  	<% end %>	
+  </div>

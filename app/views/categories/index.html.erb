@@ -1,0 +1,29 @@
+<% provide(:title, 'Categories')%>
+<div class="row">
+  <h3>Categories</h3>
+  <ul class="list-inline">
+
+  	  <% @categories.each do |category| %>
+    <li class="category-<%= category.id %>">
+    <%= link_to category.name, category %></a>
+
+
+    <div id="category_micropost_<%= category.id %>" style="display: none;">
+    	 
+	</div>
+   
+    </li>
+  <% end %>
+  </ul>
+</div>
+
+<script type="text/javascript">
+    function show_microposts(which){
+    	if (!document.getElementById)
+    		return;
+		if (which.style.display=="block")
+			which.style.display = "none";
+		else
+			which.style.display = "block";
+	};
+</script>

@@ -1,0 +1,96 @@
+<li id="micropost-<%= micropost.id %>">
+	<span class="avatar"><%= image_tag micropost.user.avatar.url, size: "80x80" %></span>
+	<span class="user"><%= link_to micropost.user.name, micropost.user %></span>
+	<span class="content">
+	<%= micropost.content %>
+	<div>
+		<% micropost.pictures.each do |p| %>
+			<div class="micropost_picture">
+				<%= image_tag p.picture_url, size: 'small' %>
+			</div>
+		<% end %>
+	</div>
+		
+	</span>
+
+	<span class="timestamp">	
+		Posted <%= time_ago_in_words(micropost.created_at) %> ago.
+		<a href="javascript:show_comment(document.getElementById('comment_content_<%= micropost.id %>'))" class="comment"> <%= micropost.comments.count %> Comment</a>
+		<% if current_user?(micropost.user) %>
+			<%= link_to "Delete", micropost, method: :delete,
+									data: {confirm: "Are you sure?"} %>
+		<% end %>
+	</span>
+
+
+
+	<div class="form-comment">
+		<div id="comment_content_<%= micropost.id %>" style="display: none">
+			
+			<% micropost.comments.each do |comment| %>
+			<% unless comment.parent_id.present? %>
+			<div class="comments">
+			<span class="avatar"><%= image_tag comment.user.avatar.url, size: "50x50" %></span>
+				<p class="comment_inf">
+				<span><%= link_to comment.user.name, comment.user %></span> :  <%= comment.content %>
+				</p>
+				<span class="timestamp">	
+				Posted <%= time_ago_in_words(comment.created_at) %> ago.
+				<a href="javascript:show_reply(document.getElementById('reply_content_<%= comment.id %>'))" class="reply">Reply</a>
+				<% if current_user?(comment.user) || current_user?(micropost.user) %>
+				<%= link_to "Delete", [micropost, comment], method: :delete,
+									data: {confirm: "Are you sure?"} %>
+				<% end %>
+				</span>
+			</div>	
+			<% end %>
+			<div class="replies">
+				<div id="reply_content_<%= comment.id %>" style="display: none">
+					<% comment.childrens.each do |comment|%>
+					<span class="avatar"><%= image_tag comment.user.avatar.url, size: "50x50" %></span>
+					<div class="replies_list">
+						<span><%= link_to comment.user.name, comment.user %></span> :  <%= comment.content %>
+						<span class="timestamp">
+						Posted <%= time_ago_in_words(comment.created_at) %> ago.
+						<% if current_user?(comment.user) || current_user?(micropost.user) %>
+						<%= link_to "Delete", [micropost, comment], method: :delete,
+									data: {confirm: "Are you sure?"} %>
+						<% end %>
+						</span>
+					</div>
+					<% end %>
+					<div class="form_reply">
+					<%= render 'comments/comment_reply_form', micropost: micropost, comment: comment %>	
+					</div>
+					
+				</div>
+			</div>
+			<% end %>
+
+			
+			
+   		  	<%= render 'comments/comment_form', micropost: micropost %>
+
+    	</div>		
+	</div>
+</li>
+
+<script type="text/javascript">
+    function show_comment(which){
+    	if (!document.getElementById)
+    		return;
+		if (which.style.display=="block")
+			which.style.display = "none";
+		else
+			which.style.display = "block";
+	};
+
+	function show_reply(which){
+    	if (!document.getElementById)
+    		return;
+		if (which.style.display=="block")
+			which.style.display = "none";
+		else
+			which.style.display = "block";
+	};
+</script>

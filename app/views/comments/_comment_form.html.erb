@@ -1,0 +1,7 @@
+<%= form_for ([micropost, @comment]), html: { mutipart: true } do |f| %>	 
+    <div class="field">
+    	<%= f.text_area :content, placeholder: "Compose new comment", class: "form-control" %>
+    </div>
+    <%= f.hidden_field :micropost_id, value: @micropost if @micropost.present? %>
+    <%= f.submit "Create New Comment", class: "btn btn-primary" %>
+<% end %>
